@@ -5,7 +5,6 @@ import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { ThemeProvider } from "@/components/theme-provider";
 import { InvestmentProvider } from "@/contexts/investment-context";
-import { GlobalContextProvider } from "@/contexts/global-context";
 
 const josefinSans = Josefin_Sans({ 
   variable: "--font-josefin-sans", 
@@ -25,18 +24,16 @@ export default function RootLayout({children}: Readonly<{children: React.ReactNo
     <html lang="en" suppressHydrationWarning>
       <body className={`${josefinSans.variable} font-josefin-sans antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          <GlobalContextProvider>
-            <InvestmentProvider>
-              <SidebarProvider>
-                <AppSidebar />
-                <SidebarInset>
-                  <div className="flex min-h-screen flex-1 flex-col bg-muted/50 sm:ml-4 sm:rounded-t-2xl">
-                    <main className="flex-1">{children}</main>
-                  </div>
-                </SidebarInset>
-              </SidebarProvider>
-            </InvestmentProvider>
-          </GlobalContextProvider>
+          <InvestmentProvider>
+            <SidebarProvider>
+              <AppSidebar />
+              <SidebarInset>
+                <div className="flex min-h-screen flex-1 flex-col bg-muted/50 sm:ml-4 sm:rounded-t-2xl">
+                  <main className="flex-1">{children}</main>
+                </div>
+              </SidebarInset>
+            </SidebarProvider>
+          </InvestmentProvider>
         </ThemeProvider>
       </body>
     </html>
