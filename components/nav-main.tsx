@@ -78,7 +78,7 @@ export function NavMain({ items, }: NavMainProps) {
       <SidebarGroupLabel>
         <div>
           <p className="text-xs text-muted-foreground">2025 - UTN</p>
-          <p className="text-sm text-muted-foreground">Realizado por Vitorio Pugliese</p>
+          <p className="text-sm text-muted-foreground">Realizado por Vittorio Pugliese</p>
         </div>
       </SidebarGroupLabel>
     </SidebarGroup>
