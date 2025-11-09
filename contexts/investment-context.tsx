@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useCallback, ReactNode } from "react";
+import { createContext, useContext, useCallback, ReactNode } from "react";
 import { BankData, BankResults, BestInvestment, InvestmentCalculation } from "@/types/investment";
 import { useInvestmentCalculator } from "@/hooks/use-investment-calculator";
 import { useLocalStorage } from "@/hooks/use-local-storage";
@@ -17,7 +17,6 @@ interface InvestmentContextType {
   reset: () => void;
   loadExampleData: (exampleBanks: BankData[]) => void;
   bestInvestment: BestInvestment | null;
-  isCalculating: boolean;
   isDataComplete: boolean;
   hasResults: boolean;
   saveToHistory: () => void;
@@ -27,16 +26,11 @@ interface InvestmentContextType {
   clearHistory: () => void;
 }
 
-const InvestmentContext = createContext<InvestmentContextType | undefined>(
-  undefined
-);
+const InvestmentContext = createContext<InvestmentContextType | undefined>(undefined);
 
 export function InvestmentProvider({ children }: { children: ReactNode }) {
   const calculator = useInvestmentCalculator(INITIAL_CAPITAL);
-  const [history, setHistory] = useLocalStorage<InvestmentCalculation[]>(
-    "investment-history",
-    []
-  );
+  const [history, setHistory] = useLocalStorage<InvestmentCalculation[]>("investment-history", []);
 
   const saveToHistory = useCallback(() => {
     if (!calculator.results) return;
@@ -52,12 +46,7 @@ export function InvestmentProvider({ children }: { children: ReactNode }) {
     setHistory((prev) => [calculation, ...prev].slice(0, 20)); // Keep last 20
   }, [calculator.results, calculator.capital, calculator.banks, setHistory]);
 
-  const deleteHistoryItem = useCallback(
-    (id: string) => {
-      setHistory((prev) => prev.filter((item) => item.id !== id));
-    },
-    [setHistory]
-  );
+  const deleteHistoryItem = useCallback((id: string) => setHistory((prev) => prev.filter((item) => item.id !== id)), [setHistory]);
 
   const loadFromHistory = useCallback(
     (id: string) => {
@@ -72,15 +61,9 @@ export function InvestmentProvider({ children }: { children: ReactNode }) {
     [history, calculator]
   );
 
-  const clearHistory = useCallback(() => {
-    setHistory([]);
-  }, [setHistory]);
+  const clearHistory = useCallback(() => setHistory([]), [setHistory]);
 
-  return (
-    <InvestmentContext.Provider value={{ ...calculator, saveToHistory, history, deleteHistoryItem, loadFromHistory, clearHistory, }} >
-      {children}
-    </InvestmentContext.Provider>
-  );
+  return <InvestmentContext.Provider value={{ ...calculator, saveToHistory, history, deleteHistoryItem, loadFromHistory, clearHistory}}>{children}</InvestmentContext.Provider>
 }
 
 export function useInvestment() {

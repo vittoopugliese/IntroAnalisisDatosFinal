@@ -307,7 +307,7 @@ Escenario Pesimista (-20%): Tasas bajan a 40%
 Este proyecto fue desarrollado como **Trabajo Final** para la materia:
 
 - **Materia**: Introducción al Análisis de Datos
-- **Año**: 2024
+- **Año**: 2025
 - **Objetivo**: Crear una herramienta práctica de análisis de inversiones
 - **Tecnologías**: Next.js 16, React 19, TypeScript, Tailwind CSS 4
 

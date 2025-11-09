@@ -1,13 +1,4 @@
-import {
-  Calculator,
-  TrendingUp,
-  BarChart3,
-  Award,
-  Code,
-  Zap,
-  Shield,
-  Github,
-} from "lucide-react";
+import { Calculator, TrendingUp, BarChart3, Award, Code, Shield, } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -16,7 +7,6 @@ import Link from "next/link";
 export default function AboutPage() {
   return (
     <div className="space-y-8 p-6">
-      {/* Header */}
       <div className="text-center">
         <div className="mb-4 inline-flex items-center justify-center rounded-full bg-primary/10 p-4">
           <TrendingUp className="h-12 w-12 text-primary" />
@@ -29,7 +19,6 @@ export default function AboutPage() {
         </p>
       </div>
 
-      {/* Project Info */}
       <div className="mx-auto max-w-4xl space-y-6">
         <div className="rounded-lg border bg-card p-6">
           <h2 className="mb-4 text-2xl font-bold">Sobre el Proyecto</h2>
@@ -49,7 +38,6 @@ export default function AboutPage() {
           </div>
         </div>
 
-        {/* Features Grid */}
         <div className="grid gap-4 md:grid-cols-2">
           <div className="rounded-lg border bg-card p-4">
             <div className="mb-3 flex items-center gap-3">
@@ -106,7 +94,6 @@ export default function AboutPage() {
 
         <Separator />
 
-        {/* Tech Stack */}
         <div className="rounded-lg border bg-card p-6">
           <div className="mb-4 flex items-center gap-2">
             <Code className="h-5 w-5 text-primary" />
@@ -136,7 +123,6 @@ export default function AboutPage() {
 
         <Separator />
 
-        {/* Calculations Info */}
         <div className="rounded-lg border bg-card p-6">
           <h2 className="mb-4 text-2xl font-bold">Metodología de Cálculo</h2>
           <div className="space-y-4">
@@ -182,7 +168,6 @@ export default function AboutPage() {
 
         <Separator />
 
-        {/* Bancos */}
         <div className="rounded-lg border bg-card p-6">
           <h2 className="mb-4 text-2xl font-bold">Bancos Analizados</h2>
           <div className="grid gap-4 md:grid-cols-3">
@@ -214,7 +199,6 @@ export default function AboutPage() {
 
         <Separator />
 
-        {/* Credits */}
         <div className="rounded-lg border bg-card p-6">
           <h2 className="mb-4 text-2xl font-bold">Créditos</h2>
           <div className="space-y-2 text-sm text-muted-foreground">
@@ -222,7 +206,7 @@ export default function AboutPage() {
               <strong>Materia:</strong> Introducción al Análisis de Datos
             </p>
             <p>
-              <strong>Año:</strong> 2024
+              <strong>Año:</strong> 2025
             </p>
             <p>
               Trabajo Final - Introducción al Análisis de Datos por Vitorio Pugliese
@@ -230,7 +214,6 @@ export default function AboutPage() {
           </div>
         </div>
 
-        {/* CTA */}
         <div className="rounded-xl bg-gradient-to-br from-primary/20 via-primary/10 to-background border p-8 text-center">
           <h3 className="mb-2 text-2xl font-bold">¿Listo para comenzar?</h3>
           <p className="mb-6 text-muted-foreground">

@@ -9,23 +9,15 @@ export function useInvestmentCalculator(initialCapital: number = INITIAL_CAPITAL
   const [capital, setCapital] = useState(initialCapital);
   const [banks, setBanks] = useState<BankData[]>(INITIAL_BANKS);
   const [results, setResults] = useState<BankResults[] | null>(null);
-  const [isCalculating, setIsCalculating] = useState(false);
 
   const calculate = useCallback(() => {
-    setIsCalculating(true);
-    
-    // Simulate a small delay for UX (show loading state)
-    setTimeout(() => {
-      const calculatedResults = banks.map((bank) =>
-        calculateBankResults(bank, capital)
-      );
-      setResults(calculatedResults);
-      setIsCalculating(false);
-    }, 300);
+    const calculatedResults = banks.map((bank) =>calculateBankResults(bank, capital));
+    setResults(calculatedResults);
   }, [banks, capital]);
 
   const reset = useCallback(() => {
     setBanks(INITIAL_BANKS);
+    setCapital(INITIAL_CAPITAL);
     setResults(null);
   }, []);
 
@@ -61,6 +53,6 @@ export function useInvestmentCalculator(initialCapital: number = INITIAL_CAPITAL
     return results !== null && results.length > 0;
   }, [results]);
 
-  return { capital, setCapital, banks, setBanks, updateBankRate, results, calculate, reset, loadExampleData, bestInvestment, isCalculating, isDataComplete, hasResults, };
+  return { capital, setCapital, banks, setBanks, updateBankRate, results, calculate, reset, loadExampleData, bestInvestment, isDataComplete, hasResults, };
 }
 

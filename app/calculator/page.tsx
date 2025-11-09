@@ -8,34 +8,19 @@ import { LineEvolutionChart } from "@/components/charts/line-evolution-chart";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Calculator, Trash2, Download, AlertCircle, TrendingUp, Award, Sparkles, } from "lucide-react";
+import { Calculator, Trash2, AlertCircle, TrendingUp, Award, Sparkles } from "lucide-react";
 import { formatCurrency, formatPercentage } from "@/lib/calculations";
 import { EXAMPLE_DATA } from "@/lib/constants";
 import { useRouter } from "next/navigation";
 
 export default function CalculatorPage() {
-  const {
-    capital,
-    banks,
-    updateBankRate,
-    results,
-    calculate,
-    reset,
-    isCalculating,
-    isDataComplete,
-    hasResults,
-    loadExampleData,
-    bestInvestment,
-  } = useInvestment();
+  const { capital, setCapital, banks, updateBankRate, results, calculate, reset, isDataComplete, hasResults, loadExampleData, bestInvestment, } = useInvestment();
 
   const router = useRouter();
 
   const handleCalculate = () => {
     calculate();
-    // Scroll to results after a small delay
-    setTimeout(() => {
-      document.getElementById("results")?.scrollIntoView({ behavior: "smooth" });
-    }, 400);
+    document.getElementById("results")?.scrollIntoView({ behavior: "smooth" });
   };
 
   const handleLoadExample = () => {
@@ -48,48 +33,29 @@ export default function CalculatorPage() {
 
   return (
     <div className="space-y-6 p-6">
-      {/* Header */}
-      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
-        <div>
-          <h1 className="text-3xl font-bold">Calculadora de Inversiones</h1>
-          <p className="mt-1 text-muted-foreground">
-            Ingresa las tasas históricas para calcular rendimientos
-          </p>
-        </div>
-        <div className="rounded-lg border bg-card p-4 text-center">
-          <p className="text-sm font-medium text-muted-foreground">
-            Capital a Invertir
-          </p>
-          <p className="mt-1 text-2xl font-bold text-primary">
-            {formatCurrency(capital)}
-          </p>
-        </div>
+      <div>
+        <h1 className="text-3xl font-bold">Calculadora de Inversiones</h1>
+        <p className="mt-1 text-muted-foreground">
+          Ingresa el capital y las tasas históricas para calcular rendimientos
+        </p>
       </div>
 
-      {/* Info Alert */}
       <Alert>
         <AlertCircle className="h-4 w-4" />
         <AlertDescription>
-          Ingresa las <strong>tasas anuales históricas</strong> de los últimos 3
+          Ingresa el <strong>monto a invertir</strong> y las <strong>tasas anuales históricas</strong> de los últimos 3
           años (2022, 2023, 2024) para cada banco. El sistema calculará el
           promedio y proyectará los rendimientos en tres modalidades: anual,
           trimestral y mensual.
         </AlertDescription>
       </Alert>
 
-      {/* Investment Form */}
-      <InvestmentForm banks={banks} onUpdateRate={updateBankRate} />
+      <InvestmentForm banks={banks} onUpdateRate={updateBankRate} capital={capital} onCapitalChange={setCapital} />
 
-      {/* Action Buttons */}
       <div className="flex flex-col gap-3 sm:flex-row">
-        <Button
-          onClick={handleCalculate}
-          disabled={!isDataComplete || isCalculating}
-          size="lg"
-          className="flex-1"
-        >
+        <Button onClick={handleCalculate} disabled={!isDataComplete || capital <= 0} size="lg" className="flex-1" >
           <Calculator className="mr-2 h-5 w-5" />
-          {isCalculating ? "Calculando..." : "Calcular Rendimientos"}
+          Calcular Rendimientos
         </Button>
         <Button onClick={handleLoadExample} variant="outline" size="lg">
           <Sparkles className="mr-2 h-5 w-5" />
@@ -101,22 +67,20 @@ export default function CalculatorPage() {
         </Button>
       </div>
 
-      {!isDataComplete && (
+      {(!isDataComplete || capital <= 0) && (
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>
-            Completa todas las tasas para poder calcular los rendimientos. Cada
-            banco requiere 3 tasas anuales mayores a 0%.
+            {capital <= 0 && "Ingresa un monto válido para invertir. "}
+            {!isDataComplete && "Completa todas las tasas para poder calcular los rendimientos. Cada banco requiere 3 tasas anuales mayores a 0%."}
           </AlertDescription>
         </Alert>
       )}
 
-      {/* Results Section */}
       {hasResults && results && bestInvestment && (
         <>
           <Separator className="my-8" id="results" />
 
-          {/* Winner Banner */}
           <div className="relative overflow-hidden rounded-xl border-2 border-primary/50 bg-gradient-to-br from-primary/30 via-primary/15 to-background p-6 shadow-lg">
             <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
               <div className="flex items-start gap-4">
@@ -156,14 +120,9 @@ export default function CalculatorPage() {
                 <TrendingUp className="mr-2 h-4 w-4" />
                 Ver Dashboard Completo
               </Button>
-              <Button variant="outline">
-                <Download className="mr-2 h-4 w-4" />
-                Exportar Resultados
-              </Button>
             </div>
           </div>
 
-          {/* Comparison Table */}
           <div>
             <h3 className="mb-4 text-xl font-semibold">
               Tabla Comparativa de Rendimientos
@@ -171,7 +130,6 @@ export default function CalculatorPage() {
             <InvestmentTable results={results} />
           </div>
 
-          {/* Charts */}
           <div>
             <h3 className="mb-4 text-xl font-semibold">Visualización Gráfica</h3>
             <div className="grid gap-6 lg:grid-cols-2">
@@ -180,59 +138,38 @@ export default function CalculatorPage() {
             </div>
           </div>
 
-          {/* Detailed Analysis */}
           <div className="rounded-lg border bg-card p-6">
             <h3 className="mb-4 text-lg font-semibold">Análisis Detallado</h3>
             <div className="grid gap-6 md:grid-cols-3">
               {results.map((result) => (
-                <div
-                  key={result.bank.id}
-                  className="space-y-4 rounded-lg border bg-muted/30 p-4"
-                >
+                <div key={result.bank.id} className="space-y-4 rounded-lg border bg-muted/30 p-4" >
                   <div className="flex items-center gap-3">
-                    <div
-                      className="h-3 w-3 rounded-full"
-                      style={{ backgroundColor: result.bank.color }}
-                    />
+                    <div className="h-3 w-3 rounded-full" style={{ backgroundColor: result.bank.color }} />
                     <h4 className="font-semibold">{result.bank.name}</h4>
                   </div>
 
                   <div className="space-y-3 text-sm">
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">
-                        Tasa Promedio:
-                      </span>
-                      <span className="font-semibold">
-                        {formatPercentage(result.averageRate)}
-                      </span>
+                      <span className="text-muted-foreground">Tasa Promedio:</span>
+                      <span className="font-semibold"> {formatPercentage(result.averageRate)} </span>
                     </div>
                     <Separator />
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Anual:</span>
-                      <span className="font-semibold">
-                        {formatCurrency(result.annual.profit)}
-                      </span>
+                      <span className="font-semibold"> {formatCurrency(result.annual.profit)} </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Trimestral:</span>
-                      <span className="font-semibold">
-                        {formatCurrency(result.quarterly.profit)}
-                      </span>
+                      <span className="font-semibold"> {formatCurrency(result.quarterly.profit)} </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Mensual:</span>
-                      <span className="font-semibold">
-                        {formatCurrency(result.monthly.profit)}
-                      </span>
+                      <span className="font-semibold"> {formatCurrency(result.monthly.profit)} </span>
                     </div>
                     <Separator />
                     <div className="rounded bg-primary/10 p-2 text-center">
-                      <p className="text-xs text-muted-foreground">
-                        Mejor Modalidad
-                      </p>
-                      <p className="font-bold text-primary">
-                        {result.bestModality.name}
-                      </p>
+                      <p className="text-xs text-muted-foreground"> Mejor Modalidad </p>
+                      <p className="font-bold text-primary"> {result.bestModality.name} </p>
                     </div>
                   </div>
                 </div>
@@ -240,7 +177,6 @@ export default function CalculatorPage() {
             </div>
           </div>
 
-          {/* Info Footer */}
           <Alert>
             <TrendingUp className="h-4 w-4" />
             <AlertDescription>
@@ -254,4 +190,3 @@ export default function CalculatorPage() {
     </div>
   );
 }
-
